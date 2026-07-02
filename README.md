@@ -4,6 +4,24 @@ Same philosophy as v1 — adaptive complexity, TDD-first, quality gates, empathe
 review, smart commits — rebuilt on native Claude Code primitives, and organized by
 **context-cost tier** so nothing wastes your context window.
 
+## Quick start — "I want to…" → run this
+
+| I want to… | Command |
+|---|---|
+| Plan a **new project** / prep before a hackathon (no code yet) | `/apex-discovery <idea>` |
+| **Build** a feature / fix / refactor (test-first) | `/apex-feature <description>` |
+| Get a **design review** before committing | `/apex-review` |
+| Hunt for **bugs** in my changes | `/code-review` *(built-in)* |
+| **Commit** my work cleanly | `/apex-commit` |
+| **Ship**: push → PR → auto-fix to a 5/5 Greptile score | `/apex-ship` |
+| Drive an **existing PR** to 5/5 | `/greploop <PR#>` |
+
+Or just say **"let's use APEX to …"** and it triggers itself. Normal order per project:
+`/apex-discovery` → `/apex-feature` (repeat) → `/apex-review` → `/apex-ship`.
+
+> 📄 **Full "when I forget" cheat sheet:** [HOW_TO_USE.txt](HOW_TO_USE.txt) — every command's
+> when/what, the automatic quality gate, the 3-tier model, cost notes, and setup reminders.
+
 ## The three tiers (context engineering)
 
 Every piece of guidance is placed by how it trades context cost against availability:
