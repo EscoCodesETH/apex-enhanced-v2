@@ -1,0 +1,140 @@
+===============================================================================
+ APEX ENHANCED v2 — HOW & WHEN TO USE IT   (quick reference / "I forgot" guide)
+===============================================================================
+
+WHAT APEX IS
+  A disciplined dev workflow for Claude Code. It scales rigor to risk, plans
+  before building, writes tests first, enforces quality automatically, and
+  ships clean PRs. You drive it with a few slash commands; the rest is automatic.
+
+
+-------------------------------------------------------------------------------
+ THE 30-SECOND VERSION — "I want to..."  ->  use this
+-------------------------------------------------------------------------------
+  Plan a NEW project / prep before a hackathon ....  /apex-discovery <idea>
+  Build a feature / fix / refactor ................  /apex-feature <description>
+  Get a design review before committing ...........  /apex-review
+  Hunt for bugs in my changes .....................  /code-review   (built-in)
+  Commit my work nicely ...........................  /apex-commit
+  Ship it: push + PR + auto-fix to 5/5 ............  /apex-ship
+  Loop an existing PR to 5/5 ......................  /greploop <PR#>
+
+  Or just say: "let's use APEX to <do X>"  and it triggers itself.
+
+
+-------------------------------------------------------------------------------
+ THE NORMAL ORDER OF A PROJECT
+-------------------------------------------------------------------------------
+  1) /apex-discovery   -> plan everything, produces BLUEPRINT.md  (NO code yet)
+  2) /apex-feature     -> build ONE item from the blueprint's backlog (TDD)
+  3) /apex-review      -> craft/design review of the diff
+  4) /apex-ship        -> commit, push, PR, and loop with Greptile until 5/5
+  (repeat 2-4 for each backlog item)
+
+
+-------------------------------------------------------------------------------
+ EACH COMMAND — WHEN & WHAT
+-------------------------------------------------------------------------------
+
+/apex-discovery <idea>
+  WHEN: Starting from scratch. Brainstorming. Pre-hackathon planning. Whenever
+        you want to figure everything out BEFORE writing real code.
+  DOES: Validates the idea, designs the architecture, runs throwaway "spikes"
+        (test real APIs, try AWS/Azure services, prototype the hard part),
+        sketches wireframes + API contracts, and writes a prioritized build
+        backlog. Output = BLUEPRINT.md. Writes NO production code.
+  NOTE: Experiments live in spikes/ or experiments/ and are EXEMPT from the
+        quality gate — prototype messily, that's the point.
+  EX:   /apex-discovery a CLI tool that summarizes my git history
+
+/apex-feature <description>
+  WHEN: Adding/changing something in an EXISTING project. Your main build command.
+  DOES: Classifies complexity (Lightweight / Standard / Robust), asks only the
+        questions that matter, plans (and asks approval for bigger work), then
+        builds TEST-FIRST. The quality gate auto-checks every edit.
+  EX:   /apex-feature add rate limiting to the login endpoint
+
+/apex-review [target]
+  WHEN: After building, BEFORE committing. For readability/design feedback.
+  DOES: Empathetic Sandi-Metz style review of your uncommitted diff (via the
+        apex-reviewer subagent). Leads with what's good, frames fixes as
+        opportunities.
+  PAIR: Use /code-review (built-in) alongside it for an adversarial BUG hunt.
+
+/apex-commit
+  WHEN: Ready to commit but you DON'T want the full push/PR/Greptile loop.
+  DOES: Runs tests, groups changes into atomic Conventional Commits, writes a
+        PR description. The cheapest "save my work" path.
+
+/apex-ship [title]
+  WHEN: Feature is done and you want it reviewed-to-golden hands-off.
+  DOES: verify tests -> commit -> push -> open PR into `staging` -> run Greploop
+        (Greptile reviews, Claude fixes, re-reviews) until 5/5.
+  NEEDS: Greptile installed on the repo + greploop skill (see SETUP). Refuses to
+         ship on failing tests or from the staging/main branch.
+
+/greploop <PR#>
+  WHEN: You already have a PR and just want it driven to a perfect Greptile score.
+  DOES: Reads Greptile's review, applies every fix, pushes, re-reviews, loops
+        until 5/5 or its iteration cap.
+
+
+-------------------------------------------------------------------------------
+ THE AUTOMATIC PART (you don't call this — it just runs)
+-------------------------------------------------------------------------------
+  QUALITY-GATE HOOK: After every file edit, Claude Code runs a lint/type-check.
+  If it fails, Claude must fix it before continuing. Fast checks only; the full
+  test suite runs at commit/ship time. Skips spikes/ and experiments/ folders.
+
+
+-------------------------------------------------------------------------------
+ THE 3-TIER IDEA (why it's organized this way)
+-------------------------------------------------------------------------------
+  ALWAYS-ON  (CLAUDE.md) ...... rules true every turn (TDD, branch protocol).
+                               Costs context, so it's kept short.
+  ON-DEMAND  (skill+commands) . the procedures above; load only when invoked.
+  ENFORCED   (the hook) ....... runs no matter what; costs zero context.
+
+  Rule of thumb for adding your own stuff:
+    Must be true every turn?      -> put it in CLAUDE.md
+    Only sometimes?               -> make it a command/skill
+    Must run whether I remember?  -> make it a hook
+
+
+-------------------------------------------------------------------------------
+ WHO SPENDS WHAT (token/cost sanity)
+-------------------------------------------------------------------------------
+  The CODE REVIEW itself (finding bugs, the 5/5 score) = GREPTILE's resources,
+    on your Greptile plan. NOT your Claude tokens.
+  APPLYING FIXES (editing code in the loop) = your Claude tokens. Only spent
+    when there's something to fix. If a PR is already 5/5, greploop just checks
+    and exits — near-zero cost.
+
+
+-------------------------------------------------------------------------------
+ SETUP REMINDERS
+-------------------------------------------------------------------------------
+  PER PROJECT (for the always-on rules):
+    Copy this repo's CLAUDE.md into your project root:
+      cp /path/to/apex-enhanced-v2/CLAUDE.md ./CLAUDE.md
+    (Edit the branch name if the project doesn't use `staging`.)
+
+  ALREADY INSTALLED GLOBALLY (~/.claude/): skill, commands, apex-reviewer,
+    quality-gate hook. Works in every project.
+
+  FOR /apex-ship's LOOP (one-time):
+    1. Create a Greptile account and install Greptile on the GitHub repo.
+    2. greploop skill is installed at ~/.claude/skills/greploop/.
+
+  AFTER CHANGING ANY SKILL/COMMAND: run /reload-skills or restart the session.
+
+
+-------------------------------------------------------------------------------
+ QUICK RULES TO REMEMBER
+-------------------------------------------------------------------------------
+  * Discovery = planning (no code).  Feature = building (with tests).
+  * Spikes are throwaway — keep them in spikes/, never ship from them.
+  * Don't fight the quality gate; if it blocks, fix it, that's the deal.
+  * Small, focused PRs into staging. Promote staging -> main when release-ready.
+  * If you forget everything else: just say "use APEX" and answer its questions.
+===============================================================================
