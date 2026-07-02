@@ -1,0 +1,9 @@
+{
+  "name": "apex-enhanced-v2",
+  "description": "AI-Powered EXcellence: an adaptive, TDD-first development workflow with enforced quality gates, discovery/blueprint planning, empathetic code review, and smart commits — for Claude Code.",
+  "version": "2.0.0",
+  "author": { "name": "EscoCodesETH" },
+  "homepage": "https://github.com/EscoCodesETH/apex-enhanced-v2",
+  "repository": "https://github.com/EscoCodesETH/apex-enhanced-v2",
+  "license": "MIT"
+}
